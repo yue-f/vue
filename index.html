@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>vue</title>
+</head>
+<body>
+  <div id="app">
+    {{message}}
+  </div>
+  <div id="app-2">
+    <span v-bind:title="message">鼠标悬停几秒种查看吃出动态绑定的信息</span>
+  </div>
+  
+  <div id="app-3">
+    <p v-if='seen'>show</p>
+  </div>
+  <!-- 过渡效果 -->
+  <div id="app-4">
+    <ol>
+      <li v-for="todo in todos">
+        {{todo.text}}
+      </li>
+    </ol>
+  </div>
+
+  <div id="app-5">
+    <p>{{message}}</p>
+    <button v-on:click="reverseMessage">反转消息</button>
+  </div>
+
+  <div id="app-6">
+    <p>{{message}}</p>
+    <input v-model="message">
+  </div>
+
+  <div id="app-7">
+    <ol>
+      <todo-item
+        v-for="item in groceryList"
+        v-bind:todo="item"
+        v-bind:key="item.id"
+      ></todo-item>
+    </ol>
+  </div>
+
+  <div id="app-8">
+    <p>{{foo}}</p>
+    <button v-on:click="foo = 'baz'">Change it</button>
+  </div>
+
+  <div id="app-9"></div>
+
+  <!-- v-once -->
+  <div id="app-10">
+    <span v-once> 这个值不会改变{{msg}}</span>
+    <!-- v-html -->
+    <p>using mustache: {{rawhtml}}</p>
+    <p>using v-html directive: <span v-html="rawhtml"></span></p>
+    <div v-bind:id="dynamicId"></div>
+    <a v-bind:href="url">百度</a>
+    <button v-on:click="doSomething">change</button>
+    <!-- 注意：参数表达式的写法存在一些约束 -->
+    <!-- <a v-bind:[attributeName]="url"></a> -->
+
+    <a v-bind:['foo' + bar]="value">ha</a>
+    <!-- 如果没有someAttr则汇报警告 -->
+    <!-- <a v-bind:[someAttr]="value"> ... </a> -->
+  </div>
+
+  <!-- 计算属性 -->
+  <div id="app-11">
+    <p>Original message: {{message}}</p>
+    <p>Computed reversed message: {{reversedMessage()}}</p>
+    <p>{{fullName}}</p>
+  </div>
+
+  <div id="app-12">
+    <!-- 侦听器 -->
+    <p>
+      Ask a yes/no question: <input v-model="question">
+    </p>
+    <p>{{answer}}</p>
+  </div>
+
+  <!-- class  style -->
+  <div id="app-13">
+      <!-- 对象语法 -->
+      <div class="static" v-bind:class="{ active: isActive, 'text-danger': hasError }"></div>
+      <div v-bind:class="classObject"></div>
+
+      <!-- 数组语法 -->
+      <div v-bind:class="[activeClass, errorClass]">1231</div>
+
+      <!-- v-if/v-else -->
+      <div v-if="Math.random() > 0.5">
+        Now you see 
+      </div>
+      <div v-else-if="Math.random() > 0.8">
+        Now v-if-else
+      </div>
+      <div v-else>
+        Now you don't
+      </div>
+      
+      <!-- v-for -->
+      <ul>
+        <li v-for="(item, index) in items" :key="item.message">
+          {{ parentMessage }} - {{item.message}} - {{index}}
+        </li>
+      </ul>
+
+      <ul>
+        <li v-for="n in evenNumbers">
+          {{n}}
+        </li>
+      </ul>
+
+      <!-- 嵌套for 不适用计算属性 可以用方法 -->
+      <ul v-for="set in sets">
+        <li v-for="n in even(set)">
+          {{n}}
+        </li>
+      </ul>
+
+      <!-- <my-component 
+        v-for="(item, index) in items"
+        v-bind:item="item"
+        v-bind:index="index"
+        v-bind:key="item.id"
+      ></my-component> -->
+  </div>
+
+  <div id="todo-list-example">
+    <form v-on:submit.prevent="addNewTodo">
+      <label for="new-todo">Add a todo</label>
+      <input v-model="newTodoText" id="new-todo"  placeholder="E.g. Feed the cat">
+      <button>Add</button>
+    </form>
+    <ul>
+      <!--  is="todo-item" 判断 todo-item是否存在，可以避开一些潜在的浏览器解析错误 -->
+
+      <li
+        is="todo-item"
+        v-for="(todo, index) in todos"
+        v-bind:key="todo.id"
+        v-bind:title="todo.title"
+        v-on:remove="todos.splice(index, 1)"
+      ></li>
+    </ul>
+
+    <!-- 只有在 `key` 是 `Enter` 时调用 `vm.submit()` -->
+    <input v-on:keyup.enter="submit">
+
+    <input type="radio" id="one1" value="One" v-model="picked">
+    <label for="one">One</label>
+    <br>
+    <input type="radio" id="two1" value="Two" v-model="picked">
+    <label for="two">Two</label>
+    <br>
+    <span>Picked: {{ picked }}</span>
+
+    <div >
+      <select v-model="selected">
+        <option disabled value="">请选择</option>
+        <option>A</option>
+        <option>B</option>
+        <option>C</option>
+      </select>
+      <span>Selected: {{ selected }}</span>
+    </div>
+
+  </div>
+
+</body>
+<!-- 开发环境版本，包含了有帮助的命令行警告 -->
+<script src="js/vue.js"></script>
+<!-- 因为 AJAX 库和通用工具的生态已经相当丰富，Vue 核心代码没有重复 -->
+<!-- 提供这些功能以保持精简。这也可以让你自由选择自己更熟悉的工具。 -->
+<script src="js/axios.min.js"></script>
+<script src="js/lodash.min.js"></script>
+<script>
+
+  Vue.component('todo-item', {
+    template: '\
+      <li>\
+        {{ title }}\
+        <button v-on:click="$emit(\'remove\')">Remove</button>\
+      </li>\
+    ',
+    props: ['title']
+
+  })
+
+  new Vue({
+    el: '#todo-list-example',
+    data: {
+      newTodoText: '',
+      todos: [
+        {
+          id: 1,
+          title: 'Do the dishes',
+        },
+        {
+          id: 2,
+          title: 'Take out the trash',
+        },
+        {
+          id: 3,
+          title: 'Mow the lawn',
+        }
+      ],
+        nextTodoId: 4,
+        picked: '',
+        selected: ''
+    },
+    methods: {
+      addNewTodo: function () {  
+        this.todos.push({
+          id: this.nextTodoId++,
+          title: this.newTodoText
+        })
+        this.newTodoText = ''
+      },
+      submit: function () {
+        console.log('submit')
+      }
+    }
+  })
+
+  // var app13 = new Vue({
+  //   el: '#app-13',
+  //   data: {
+  //     isActive: true,
+  //     hasError: false,
+  //     // classObject: {
+  //     //   active: true,
+  //     //   'text-dangar': true
+  //     // }
+  //     error: null,
+  //     activeClass: 'active',
+  //     errorClass: 'text-danger',
+  //     parentMessage: 'parent',
+  //     items: [
+  //       {message: 'Foo'},
+  //       {message: 'Bar'},
+  //     ],
+  //     numbers: [ 1, 2, 3, 4, 5 ],
+  //     sets: [[ 1, 2, 3, 4, 5 ], [6, 7, 8, 9, 10]]
+  //   },
+  //   computed: {
+  //     classObject: function () {
+  //       return {
+  //         active: this.isActive && !this.error,
+  //         'text-danger': this.error && this.error.type === 'fatal'
+  //       }
+  //     },
+  //     evenNumbers: function () {
+  //       return this.numbers.filter(function(number) {
+  //         return number % 2 === 0
+  //       })
+  //     }
+  //   },
+  //   methods: {
+  //     even: function (numbers) {
+  //       return this.numbers.filter(function(number) {
+  //         return number % 2 === 1
+  //       })
+  //     }
+  //   }
+
+  // })
+
+  // var app12 = new Vue({
+  //   el: '#app-12',
+  //   data: {
+  //     question: '',
+  //     answer: 'I cannot give you an answer until you ask a question'
+  //   },
+  //   watch: {
+  //     // 如果question发生改变就会运行这个函数
+  //     question: function (newQuestion, oldQuestion) {
+  //       this.answer = 'Waiting for you to stop typing...'
+  //       this.debounceGetAnswer()
+  //     }
+  //   },
+  //   created: function() {
+  //     /**
+  //      * _.debounce 是一个通过Lodash 限制操作频率的函数。
+  //      * 在这个例子中，我们希望限制访问 yesno.wtf/api 的频率
+  //      * AJAX 请求直到用户输入完毕才会发出。
+  //      */
+  //     this.debounceGetAnswer = _.debounce(this.getAnswer, 500)
+  //   },
+  //   methods: {
+  //     getAnswer: function() {
+  //       if(this.question.indexOf('?') === -1) {
+  //         this.answer = 'Question usually contain a question mark.;-'
+  //         return
+  //       }
+  //       this.answer = 'Thinking...'
+  //       var app12 = this
+  //       axios.get('http://yesno.wtf/api')
+  //       .then(function(response) {
+  //         app12.answer = _.capitalize(response.data.answer)
+  //       })
+  //       .catch(function(error) {
+  //         app12.answer = 'Error! Could not reach the api.' + error
+  //       })
+  //     }
+  //   }
+  // })
+  // var app = new Vue({
+  //   el: '#app',
+  //   data: {
+  //     message: 'Helllo Vue!'
+  //   }
+  // })
+
+  // var app2 = new Vue({
+  //   el: '#app-2',
+  //   data: {
+  //     message: '页面加载于' + new Date().toLocaleString()
+  //   }
+  // })
+
+  // var app3 = new Vue({
+  //   el: '#app-3',
+  //   data: {
+  //     seen: true
+  //   }
+  // })
+
+  // var app4 = new Vue({
+  //   el: '#app-4',
+  //   data: {
+  //     todos: [
+  //       {text: '学习 JavaScript'},
+  //       {text: '学习 vue'},
+  //       {text: '学习 算法'},
+  //       {text: '整个项目'}
+  //     ]
+  //   }
+  // })
+
+  // var app5 = new Vue({
+  //   el: '#app-5',
+  //   data: {
+  //     message: 'Hello Vue!'
+  //   },
+  //   methods: {
+  //     reverseMessage: function() {
+  //       this.message = this.message.split('').reverse().join('')
+  //     }
+  //   }
+  // })
+
+  // var app6 = new Vue({
+  //   el: '#app-6',
+  //   data: {
+  //     message: 'Hello Vue!'
+  //   }
+  // })
+
+  // // 定义名为todo-item的新组建
+  // Vue.component('todo-item', {
+  //   // props 类似于一个自定义的attribute
+  //   props: ['todo'],
+  //   template: `<li>{{todo.text}}</li>`
+  // })
+  // var app7 = new Vue({
+  //   el: '#app-7',
+  //   data: {
+  //     groceryList: [
+  //       {id: 0, text: '黑的'},
+  //       {id: 1, text: '白的'},
+  //       {id: 2, text: '黄的'},
+  //       {id: 3, text: '红的'},
+  //       {id: 4, text: '绿的'}
+  //     ]
+  //   }
+  // })
+
+  // var obj = {
+  //   foo:'bar'
+  // }
+  // // object.freeze的内容是不可修改的
+  // // Object.freeze(obj);
+  // var app8 = new Vue({
+  //   el: '#app-8',
+  //   data: obj
+  // })
+
+  // var data = {a: 1}
+  // var app9 = new Vue({
+  //   el:'#app-9',
+  //   data: data,
+  //   created: function () {
+  //     // this 指向的是 app9 
+  //     console.log('a is:', this.a, this)
+  //   }
+  // })
+  // console.log(app9.$data === data)
+  // console.log(app9.$el === document.getElementById('app-9'))
+
+  // // $watch 是一个实例方法
+  // app9.$watch('a', function(newValue, oldValue) {
+  //   console.log('这个回调将在app9.a 改变后调用', newValue, oldValue)
+  // })
+  
+  // var app10 = new Vue({
+  //   el: '#app-10',
+  //   data: {
+  //     msg: 111,
+  //     rawhtml: '<span style="color: red">this should be red</span>',
+  //     dynamicId: 10,
+  //     url: 'http://www.baidu.com'
+  //   },
+  //   methods: {
+  //     doSomething: function () {
+  //       console.log('lalala')
+  //     }
+  //   }
+  // })
+
+  // var app11 = new Vue({
+  //   el: '#app-11',
+  //   data: {
+  //     message: 'Hello',
+  //     // 命令式且重复的
+  //     // fullName: 'Foo Bar',
+  //     // lastName: 'Bar',
+  //     // firstName: 'Foo'
+
+  //     // 版本升级
+  //     lastName: 'Bar',
+  //     firstName: 'Foo'
+  //   },
+  //   watch: {
+  //     // 命令式且重复的
+  //     // firstName: function(val) {
+  //     //   this.fullName = value + ' ' + this.lastName
+  //     // },
+  //     // lastName: function(val) {
+  //     //   this.fullName = this.firstName + ' ' + val
+  //     // },
+  //   },
+  //   computed: {
+  //     // 计算属性getter
+  //     reversedMessage: function () {  
+  //       console.log('computed')
+  //       // this 指向的是app11 实例
+  //       return this.message.split('').reverse().join('')
+  //     },
+
+  //      // 重新进行版本升级 
+  //     fullName:{
+  //       // return this.firstName + ' ' + this.lastName
+
+  //       // 计算属性默认只有getter，但是可以提供setter
+  //       get: function() {
+  //         return this.firstName + ' ' + this.lastName
+  //       },
+  //       set: function (newValue) {  
+  //         var names = newValue.split(' ')
+  //         this.firstName = names[0]
+  //         this.lastName = names[names.length - 1]
+  //       }
+        
+  //     }
+  //   },
+  //   methods: {
+  //     reversedMessage: function () {
+  //       console.log('methods')
+  //       return this.message.split('').reverse().join('')
+  //     }
+  //   }
+  // })
+</script>
+
+</html>
