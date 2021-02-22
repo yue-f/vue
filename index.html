@@ -172,6 +172,11 @@
       <span>Selected: {{ selected }}</span>
     </div>
 
+    <select v-model="selected">
+      <!-- 内联对象字面量 -->
+      <option v-bind:value="{ number: 123 }">123</option>
+    </select>
+
   </div>
 
 </body>
