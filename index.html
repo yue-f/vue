@@ -177,8 +177,28 @@
       <option v-bind:value="{ number: 123 }">123</option>
     </select>
 
+
+    
   </div>
 
+  <div id="components-demo">
+    <!-- 组件复用 -->
+    <button-counter></button-counter>
+    <button-counter></button-counter>
+    <button-counter></button-counter> 
+
+    <alert-box>
+      Something bad happend.
+    </alert-box>
+
+    <!-- 组件会在currentTabComponent 改变时改变 -->
+    <!-- <component v-bind:is="currentTabComponent"></component> -->
+    <base-input
+      v-model="username"
+      required
+      placeholder="Enter your username"
+    ></base-input>
+  </div>
 </body>
 <!-- 开发环境版本，包含了有帮助的命令行警告 -->
 <script src="js/vue.js"></script>
@@ -187,6 +207,46 @@
 <script src="js/axios.min.js"></script>
 <script src="js/lodash.min.js"></script>
 <script>
+
+Vue.component('base-input', {
+  inheritAttrs: false,
+  props: ['label', 'value'],
+  template: `
+    <label>
+      {{ label }}
+      <input
+        v-bind="$attrs"
+        v-bind:value="value"
+        v-on:input="$emit('input', $event.target.value)"
+      >
+    </label>
+  `
+})
+
+  Vue.component('alert-box', {
+    template: `
+      <div class="demo-alert-box">
+        <strong>Error!</strong>
+        // 插槽
+        <slot></slot>
+      </div>
+    `
+  })
+  Vue.component('button-counter', {
+    data: function () {
+      return {
+        count: 0
+      }
+    },
+    template: '<button v-on:click="count++">You clicked me {{count}} times.</button>'
+  })
+
+  var app16 = new Vue({
+    el: '#components-demo',
+    data: {
+      username: '123'
+    }
+  })
 
   Vue.component('todo-item', {
     template: '\
