@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>slot</title>
+</head>
+<body>
+
+  <div id="app">
+      <navigation-link url="/index.html">
+        Your Profile
+      </navigation-link>
+
+      <!-- 插槽和模块的其他地方一样，可以访问相同的实例property（也就是相同的“作用域”），而不能访问<navigation-link>的作用域，例如url是访问不到的 -->
+      <navigation-link url="index.html">
+        Clicking here will send you to: {{url}}
+
+        <!-- 这里的url 会是undefined，因为其（指该插槽的）内容是传递给<navigation-link>的而不是在 <navigation-link>组件内部定义的 -->
+
+        <!-- 规则： 父级模板里的所有内容都是在父级作用域中编译的；子模板里的所有内容都是在子作用域中编译的 -->
+      </navigation-link>
+
+      <!-- 具名插槽,  -->
+      <!-- <base-layout>
+        <template v-slot:header>
+          <h1>Here might be a page title </h1>
+        </template>
+        <p>A paragraph for the main content.</p>
+        <p>And another one.</p>
+        <templat v-slot:footer>
+          <p>Here's some contact info</p>
+        </templat>
+      </base-layout> -->
+
+      <!-- 作用于插槽 -->
+
+      <ul>
+        <li
+          v-for="todo in filteredTodos"
+          v-bind:key="todo.id"
+        >
+          {{todo.text}}
+        </li>
+      </ul>
+
+
+
+  </div>
+  <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+<script src="js/vue.js"></script>
+<script>
+  
+  Vue.component('navigation-link', {
+    template: `
+      <a
+        v-bind:href="url"
+        class="nav-link"
+      >
+        <slot></slot>
+      </a>
+    `
+  });
+
+  new Vue({
+    el: '#app',
+    data:{
+      filteredTodos: [
+        {id: 1},
+        {id: 2},
+        {id: 3},
+      ]
+    }
+  })
+</script>
+</body>
+</html>
